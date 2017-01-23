@@ -11,8 +11,10 @@ public class Logic {
 
     private String hello;
     private String goodbye;
-    private List<String> answers;
-    private boolean answersFileChanged;
+    private List<String> answers = new ArrayList<String>();
+    private boolean answersFileChanged = false;
+
+    public static String currentAnswersFile = "answers.txt";
 
     public Logic(String filePath) {
 
@@ -42,13 +44,14 @@ public class Logic {
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 
-            answers = new ArrayList<String>();
+            answers.clear();
 
             String sCurrentLine;
 
             while ((sCurrentLine = br.readLine()) != null) {
 
-                answers.add(new String(sCurrentLine.getBytes(), Charset.defaultCharset()));
+                //     answers.add(new String(sCurrentLine.getBytes(), Charset.defaultCharset()));
+                answers.add(new String(sCurrentLine.getBytes(), Charset.forName("UTF-8")));
             }
 
         } catch (FileNotFoundException e) {
@@ -62,7 +65,7 @@ public class Logic {
 
         } catch (IOException e) {
 
-           System.out.println("Не удалось обработать файл ответов " + filePath);
+            System.out.println("Не удалось обработать файл ответов " + filePath);
 
             if (!answersFileChanged) {
                 System.exit(10002);
@@ -86,11 +89,18 @@ public class Logic {
             }
         }
 
-        hello  = answers.get(0);
+        if (answersFileChanged) {
+
+            System.out.println("Будет использован файл ответов " + currentAnswersFile);
+            Logger.logger.info("Будет использован файл ответов " + currentAnswersFile);
+        }
+
+        hello  = answers.get(0).substring(1);
         answers.remove(0);
 
         goodbye = answers.get(answers.size() - 1);
         answers.remove(answers.size() - 1);
+
 
         return answers;
     }

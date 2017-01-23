@@ -14,7 +14,7 @@ import static org.apache.log4j.Logger.getRootLogger;
  */
 public class Logger {
 
-    public final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(talk.Logger.class);
+    public final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Logger.class);
 
     private static Logger logger_instance = null;
   //  private String now = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());

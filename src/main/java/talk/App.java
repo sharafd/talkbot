@@ -2,8 +2,9 @@ package talk;
 
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.Scanner;
+
+import static talk.Logic.currentAnswersFile;
 
 /**
  * Чатбот.Главный класс
@@ -38,7 +39,6 @@ public class App
 
         boolean talking = true;
         Scanner in = new Scanner(System.in);
-        String currentAnswersFile = "./answers.txt";
         String fname = "";
 
         Logic logic = new  Logic("./answers.txt");
@@ -65,17 +65,22 @@ public class App
                     default:
 
                         Logger.logger.info(s);
-                        System.out.println(logic.getRandomAnswer());
-                        Logger.logger.info(logic.getRandomAnswer());
+
+                        if (!s.startsWith("\"Use another file:")) {
+
+                            System.out.println(logic.getRandomAnswer());
+                            Logger.logger.info(logic.getRandomAnswer());
+                        }
                 }
             }
 
-            if (s.startsWith("\"Use another file:") && (talking)) {
+            if (s.startsWith("\"Use another file:")) {
                 try {
-                    fname = s.trim().substring(0,s.length()-1).replace("\"Use another file:", "");
-                    logic =  new  Logic(fname);
-                    currentAnswersFile = fname;
+
                     logic.answersFileWasChanged();
+                    fname = s.trim().substring(0,s.length()-1).replace("\"Use another file:", "").trim();
+                    logic.readAnswersFile(fname);
+                    currentAnswersFile = fname;
 
                 } catch (Exception e) {
 
