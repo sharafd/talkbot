@@ -50,7 +50,6 @@ public class Logic {
 
             while ((sCurrentLine = br.readLine()) != null) {
 
-                //     answers.add(new String(sCurrentLine.getBytes(), Charset.defaultCharset()));
                 answers.add(new String(sCurrentLine.getBytes(), Charset.forName("UTF-8")));
             }
 
@@ -59,6 +58,7 @@ public class Logic {
             System.out.println("Не найден файл ответов " + filePath);
 
             if (!answersFileChanged) {
+                Thread.sleep(5000);
                 System.exit(10001);
             }
 
@@ -68,6 +68,7 @@ public class Logic {
             System.out.println("Не удалось обработать файл ответов " + filePath);
 
             if (!answersFileChanged) {
+                Thread.sleep(5000);
                 System.exit(10002);
             }
         }
@@ -77,6 +78,7 @@ public class Logic {
             System.out.println("Пустой файл ответов " + filePath);
 
             if (!answersFileChanged) {
+                Thread.sleep(5000);
                 System.exit(10003);
             }
         }
@@ -85,6 +87,7 @@ public class Logic {
             System.out.println("Файл ответов " + filePath + " должен содержать не менее трех строк");
 
             if (!answersFileChanged) {
+                Thread.sleep(5000);
                 System.exit(10004);
             }
         }
@@ -100,7 +103,6 @@ public class Logic {
 
         goodbye = answers.get(answers.size() - 1);
         answers.remove(answers.size() - 1);
-
 
         return answers;
     }
@@ -134,6 +136,5 @@ public class Logic {
 
         return answers.get(n);
     }
-
 
 }
