@@ -1,34 +1,27 @@
-package talk;
+package logging;
 
 import org.apache.log4j.*;
-// import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-// import java.util.Date;
 
 import static org.apache.log4j.Logger.getRootLogger;
 
 /**
- * Логирование
- *
+ * Логирование в файл
  */
-public class Logger {
+public class FileLogger {
 
-    public final static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(talk.Logger.class);
-
-    private static Logger logger_instance = null;
-  //  private String now = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-
-    // Java 1.8
+    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(FileLogger.class);
+    private static FileLogger loggerInstance = null;
     private String now = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss").format(LocalDateTime.now());
 
-    public static synchronized Logger getInstance() {
-        if (logger_instance == null)
-            logger_instance = new Logger();
-        return logger_instance;
+    public static synchronized FileLogger getInstance() {
+        if (loggerInstance == null)
+            loggerInstance = new FileLogger();
+        return loggerInstance;
     }
 
-    private Logger() {
+    private FileLogger() {
 
      DailyRollingFileAppender fa = new DailyRollingFileAppender();
 
@@ -40,6 +33,8 @@ public class Logger {
      fa.activateOptions();
 
      getRootLogger().addAppender(fa);
-
     }
+
+    public org.apache.log4j.Logger getLogger() { return log; }
+
 }

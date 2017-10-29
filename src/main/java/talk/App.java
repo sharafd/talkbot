@@ -1,8 +1,11 @@
 package talk;
 
+import logging.ConsoleLogger;
+import logging.FileLogger;
+import org.apache.log4j.Logger;
+
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.Scanner;
 
 /**
@@ -11,30 +14,16 @@ import java.util.Scanner;
  */
 public class App 
 {
+
+    static Logger consoleLogger = ConsoleLogger.getInstance().getLogger();
+    static Logger fileLogger = FileLogger.getInstance().getLogger();
+
     public static void main( String[] args )
     {
 
-      // DOS codepage support
-      if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+        setCodepage();
 
-            PrintStream out = null;
-            PrintStream err = null;
-
-            try {
-
-                out = new PrintStream(System.out, true, "Cp866");
-                err = new PrintStream(System.err, true, "Cp866");
-            } catch (UnsupportedEncodingException e) {
-
-                e.printStackTrace();
-                System.exit(10005);
-            }
-
-            System.setOut(out);
-            System.setErr(err);
-      }
-
-      try {
+        try {
 
         boolean talking = true;
         Scanner in = new Scanner(System.in);
@@ -43,30 +32,29 @@ public class App
 
         Logic logic = new  Logic("./answers.txt");
 
-        Logger.logger.info(logic.getHello());
-        System.out.println(logic.getHello());
+        fileLogger.info(logic.getHello());
+        consoleLogger.trace(logic.getHello());
 
-        while (true) {
+        while ( 1 > 0) {
 
             String s = in.nextLine();
+            String answer;
 
             if (talking) {
 
                 switch (s) {
                     case "\"Goodbye\"":
-                        Logger.logger.info(logic.getGoodbye());
-                        System.out.println(logic.getGoodbye());
+                        fileLogger.info(logic.getGoodbye());
                         System.exit(0);
-
+                        break;
                     case "\"Stop talking\"":
                         talking = false;
                         break;
-
                     default:
-
-                        Logger.logger.info(s);
-                        System.out.println(logic.getRandomAnswer());
-                        Logger.logger.info(logic.getRandomAnswer());
+                        fileLogger.info(s);
+                        answer = logic.getRandomAnswer();
+                        fileLogger.info(answer);
+                        break;
                 }
             }
 
@@ -78,9 +66,8 @@ public class App
                     logic.answersFileWasChanged();
 
                 } catch (Exception e) {
-
-                    System.out.println("Ошибка загрузки файла ответов. " + fname );
-                    System.out.println("Будет продолжено использование " + currentAnswersFile);
+                    consoleLogger.error("Ошибка загрузки файла ответов. " + fname );
+                    consoleLogger.trace("Будет продолжено использование " + currentAnswersFile);
 
                 }
             }
@@ -91,9 +78,28 @@ public class App
         }
 
      } catch (Exception e) {
-
-          e.printStackTrace();
+          consoleLogger.trace("", e);
           System.exit(10006);
       }
+    }
+
+    private static void setCodepage() {
+        // DOS codepage support
+        if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+
+              try {
+
+                  PrintStream out = new PrintStream(System.out, true, "Cp866");
+                  PrintStream err = new PrintStream(System.err, true, "Cp866");
+                  System.setOut(out);
+                  System.setErr(err);
+
+              } catch (UnsupportedEncodingException e) {
+                  consoleLogger.trace("", e);
+                  System.exit(10005);
+              }
+
+
+        }
     }
 }

@@ -1,5 +1,8 @@
 package talk;
 
+import logging.ConsoleLogger;
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -13,24 +16,17 @@ public class Logic {
     private String goodbye;
     private List<String> answers;
     private boolean answersFileChanged;
+    static Logger consoleLogger = ConsoleLogger.getInstance().getLogger();
 
     public Logic(String filePath) {
 
-        try {
-            readAnswersFile(filePath);
-            Logger logger = Logger.getInstance();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        readAnswersFile(filePath);
     }
 
     /**
      * Выставляем флаг "Файл ответов загружен по запросу пользователя"
      */
-    public void answersFileWasChanged(){
-        answersFileChanged = true;
-    }
+    public void answersFileWasChanged(){ answersFileChanged = true; }
 
     /**
      * Чтение файла ответов в строковый массив
@@ -38,11 +34,11 @@ public class Logic {
      * @return
      * @throws Exception
      */
-    public List<String> readAnswersFile(String filePath) throws Exception {
+    public List<String> readAnswersFile(String filePath) {
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 
-            answers = new ArrayList<String>();
+            answers = new ArrayList<>();
 
             String sCurrentLine;
 
@@ -53,7 +49,7 @@ public class Logic {
 
         } catch (FileNotFoundException e) {
 
-            System.out.println("Не найден файл ответов " + filePath);
+            consoleLogger.trace("Не найден файл ответов " + filePath);
 
             if (!answersFileChanged) {
                 System.exit(10001);
@@ -62,7 +58,7 @@ public class Logic {
 
         } catch (IOException e) {
 
-           System.out.println("Не удалось обработать файл ответов " + filePath);
+            consoleLogger.trace("Не удалось обработать файл ответов " + filePath);
 
             if (!answersFileChanged) {
                 System.exit(10002);
@@ -71,15 +67,12 @@ public class Logic {
 
         if (answers == null) {
 
-            System.out.println("Пустой файл ответов " + filePath);
-
-            if (!answersFileChanged) {
-                System.exit(10003);
-            }
+            consoleLogger.trace("Пустой файл ответов " + filePath);
+            System.exit(10003);
         }
         if (answers.size() < 3) {
 
-            System.out.println("Файл ответов " + filePath + " должен содержать не менее трех строк");
+            consoleLogger.trace("Файл ответов " + filePath + " должен содержать не менее трех строк");
 
             if (!answersFileChanged) {
                 System.exit(10004);
