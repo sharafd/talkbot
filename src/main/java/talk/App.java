@@ -3,9 +3,6 @@ package talk;
 import logging.ConsoleLogger;
 import logging.FileLogger;
 import org.apache.log4j.Logger;
-
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
 /**
@@ -18,12 +15,8 @@ public class App
     static Logger consoleLogger = ConsoleLogger.getInstance().getLogger();
     static Logger fileLogger = FileLogger.getInstance().getLogger();
 
-    public static void main( String[] args )
-    {
-
-        setCodepage();
-
-        try {
+    public static void main( String[] args ) {
+     try {
 
         boolean talking = true;
         Scanner in = new Scanner(System.in);
@@ -58,18 +51,18 @@ public class App
                 }
             }
 
-            if (s.startsWith("\"Use another file:") && (talking)) {
+            if (s.startsWith("\"Use another fUse another file:") && (talking)) {
                 try {
                     fname = s.trim().substring(0,s.length()-1).replace("\"Use another file:", "");
                     logic =  new  Logic(fname);
-                    currentAnswersFile = fname;
-                    logic.answersFileWasChanged();
 
                 } catch (Exception e) {
                     consoleLogger.error("Ошибка загрузки файла ответов. " + fname );
                     consoleLogger.trace("Будет продолжено использование " + currentAnswersFile);
 
                 }
+                currentAnswersFile = fname;
+                logic.answersFileWasChanged();
             }
 
             if (s.equals("\"Start talking\"")) {
@@ -81,25 +74,7 @@ public class App
           consoleLogger.trace("", e);
           System.exit(10006);
       }
+
     }
 
-    private static void setCodepage() {
-        // DOS codepage support
-        if(System.getProperty("os.name").toLowerCase().contains("windows")) {
-
-              try {
-
-                  PrintStream out = new PrintStream(System.out, true, "Cp866");
-                  PrintStream err = new PrintStream(System.err, true, "Cp866");
-                  System.setOut(out);
-                  System.setErr(err);
-
-              } catch (UnsupportedEncodingException e) {
-                  consoleLogger.trace("", e);
-                  System.exit(10005);
-              }
-
-
-        }
-    }
 }

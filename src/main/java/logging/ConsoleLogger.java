@@ -28,6 +28,12 @@ public class ConsoleLogger {
 
      ca.setName("ConsoleLogger");
      ca.setLayout(new PatternLayout("%m%n"));
+
+     // DOS codepage support
+     if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+         ca.setEncoding("Cp866");
+     }
+
      ca.setThreshold(Level.TRACE);
      ca.activateOptions();
 
