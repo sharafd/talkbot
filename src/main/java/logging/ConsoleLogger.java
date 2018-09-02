@@ -9,38 +9,41 @@ import static org.apache.log4j.Logger.getRootLogger;
 
 
 /**
- * Логирование на консоль
+ * Логирование на консоль.
  */
-public class ConsoleLogger {
+public final class ConsoleLogger {
 
-    private static final org.apache.log4j.Logger cLog = Logger.getLogger(ConsoleLogger.class);
+    private static final org.apache.log4j.Logger C_LOG =
+            Logger.getLogger(ConsoleLogger.class);
     private static ConsoleLogger loggerInstance = null;
 
     public static synchronized ConsoleLogger getInstance() {
-        if (loggerInstance == null)
+        if (loggerInstance == null) {
             loggerInstance = new ConsoleLogger();
+        }
         return loggerInstance;
     }
 
     private ConsoleLogger() {
 
-     ConsoleAppender ca = new ConsoleAppender();
+        ConsoleAppender ca = new ConsoleAppender();
 
-     ca.setName("ConsoleLogger");
-     ca.setLayout(new PatternLayout("%m%n"));
+        ca.setName("ConsoleLogger");
+        ca.setLayout(new PatternLayout("%m%n"));
 
-     // DOS codepage support
-     if(System.getProperty("os.name").toLowerCase().contains("windows")) {
-         ca.setEncoding("Cp866");
-     }
+        // DOS codepage support
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            ca.setEncoding("Cp866");
+        }
+        ca.setThreshold(Level.INFO);
+        ca.activateOptions();
 
-     ca.setThreshold(Level.TRACE);
-     ca.activateOptions();
-
-     getRootLogger().addAppender(ca);
+        getRootLogger().addAppender(ca);
 
     }
 
-    public org.apache.log4j.Logger getLogger() { return cLog; }
+    public org.apache.log4j.Logger getLogger() {
+        return C_LOG;
+    }
 
 }

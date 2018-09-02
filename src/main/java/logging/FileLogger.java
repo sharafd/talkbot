@@ -11,7 +11,7 @@ import static org.apache.log4j.Logger.getRootLogger;
  */
 public class FileLogger {
 
-    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(FileLogger.class);
+    private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(FileLogger.class);
     private static FileLogger loggerInstance = null;
     private String now = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss").format(LocalDateTime.now());
 
@@ -26,15 +26,15 @@ public class FileLogger {
      DailyRollingFileAppender fa = new DailyRollingFileAppender();
 
      fa.setName("FileLogger");
-     fa.setFile( now  + ".log");
+     fa.setFile( now  + ".LOG");
      fa.setLayout(new PatternLayout("%d{dd-MM-yy HH:mm:ss} %m%n"));
-     fa.setThreshold(Level.INFO);
+     fa.setThreshold(Level.DEBUG);
      fa.setAppend(true);
      fa.activateOptions();
 
      getRootLogger().addAppender(fa);
     }
 
-    public org.apache.log4j.Logger getLogger() { return log; }
+    public org.apache.log4j.Logger getLogger() { return LOG; }
 
 }
