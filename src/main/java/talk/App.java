@@ -1,116 +1,102 @@
 package talk;
 
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
+import common.ConstantsProvider;
+import logging.ConsoleLogger;
+import logging.FileLogger;
+import org.apache.log4j.Logger;
+
 import java.util.Scanner;
 
-import static talk.Logic.currentAnswersFile;
-
 /**
- * Чатбот.Главный класс
- *
+ * Чатбот.Главный класс.
  */
-public class App {
-    public static void main(String[] args) {
+public final class App {
 
-        // DOS codepage support
-        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+    /**
+     * Logger - Вывод на консоль.
+     */
+    private static Logger consoleLogger =
+            ConsoleLogger.getInstance().getLogger();
 
-            PrintStream out = null;
-            PrintStream err = null;
+    /**
+     * Logger - Логирование в файл.
+     */
+    private static Logger fileLogger =
+            FileLogger.getInstance().getLogger();
 
-            try {
+    /**
+     * Default non-public constructor.
+     */
+    private App() {
+        throw new IllegalAccessError("Utility class");
+    }
 
-                out = new PrintStream(System.out, true, "Cp866");
-                err = new PrintStream(System.err, true, "Cp866");
-            } catch (UnsupportedEncodingException e) {
-
-                e.printStackTrace();
-                System.exit(10005);
-            }
-
-            System.setOut(out);
-            System.setErr(err);
-        }
-
+    /**
+     * @param args -
+     */
+    public static void main(final String[] args) {
         try {
 
             boolean talking = true;
-            Scanner in = new Scanner(System.in, "866");
+            Scanner in = new Scanner(System.in);
+            String currentAnswersFile = "./answers.txt";
             String fname = "";
 
             Logic logic = new Logic("./answers.txt");
 
-            String ans;
+            fileLogger.info(logic.getHello());
 
-            Logger.logger.info(logic.getHello());
-            System.out.println(logic.getHello());
-
-            while (true) {
+            while (1 > 0) {
 
                 String s = in.nextLine();
+                String answer;
 
-                if (s.length() > 0) {
-
-                    Logger.logger.info(s);
+                if (talking) {
 
                     switch (s) {
                         case "\"Goodbye\"":
-                            Logger.logger.info(logic.getGoodbye());
-                            System.out.println(logic.getGoodbye());
-                            Thread.sleep(5000);
+                            fileLogger.info(logic.getGoodbye());
                             System.exit(0);
-
+                            break;
                         case "\"Stop talking\"":
                             talking = false;
                             break;
-
                         default:
-
-                            if (talking) {
-
-                                if (!s.startsWith("\"Use another file:")) {
-
-                                    ans = logic.getRandomAnswer();
-                                    System.out.println(ans);
-                                    Logger.logger.info(ans);
-                                }
-                            }
-                    }
-
-                    if (s.startsWith("\"Use another file:")) {
-
-                        try {
-
-                            logic.answersFileWasChanged();
-                            fname = s.trim().substring(0, s.length() - 1).replace("\"Use another file:", "").trim();
-                            logic.readAnswersFile(fname);
-                            currentAnswersFile = fname;
-
-                        } catch (Exception e) {
-
-                            System.out.println("Ошибка загрузки файла ответов. " + fname);
-                            System.out.println("Будет продолжено использование " + currentAnswersFile);
-
-                        }
-                    }
-
-                    if (s.equals("\"Start talking\"")) {
-                        talking = true;
+                            fileLogger.debug(s);
+                            answer = logic.getRandomAnswer();
+                            fileLogger.info(answer);
+                            break;
                     }
                 }
+
+                if (s.startsWith("\"Use another file:")) {
+                    try { //NOSONAR
+                        fname = s.trim().substring(0, s.length() - 1)
+                                .replace("\"Use another file:", "");
+                        logic = new Logic(fname);
+
+                    } catch (Exception e) {
+                        consoleLogger.error("Ошибка загрузки файла ответов. "
+                                + fname);
+                        consoleLogger.error("Будет продолжено использование "
+                                + currentAnswersFile);
+
+                    }
+                    currentAnswersFile = fname;
+                    logic.answersFileWasChanged();
+                }
+
+                if (s.equals("\"Start talking\"")) {
+                    talking = true;
+                }
             }
+
         } catch (Exception e) {
-
-            e.printStackTrace();
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            System.exit(10006);
+            consoleLogger.trace("", e);
+            System.exit(ConstantsProvider
+                    .ErrorCodes.ERROR_UNHANDLED_EXCEPTION.getCode());
         }
-      }
+
     }
+
+}
