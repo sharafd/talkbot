@@ -19,31 +19,53 @@ import java.util.Random;
  */
 public class Logic {
 
+    /**
+     * Строка-приветствие.
+     */
     private String hello;
-    private String goodbye;
-    private List<String> answers;
-    private boolean answersFileChanged;
-    static Logger consoleLogger = ConsoleLogger.getInstance().getLogger();
 
+    /**
+     * Строка-прощание.
+     */
+    private String goodbye;
+
+    /**
+     * Массив строк-ответов.
+     */
+    private List<String> answers;
+
+    /**
+     * Признак смены файла ответов.
+     */
+    private boolean answersFileChanged;
+
+    /**
+     * Вывод на консоль.
+     */
+    private static Logger consoleLogger = ConsoleLogger.getInstance().getLogger();
+
+    /**
+     * @param filePath
+     */
     public Logic(String filePath) {
         readAnswersFile(filePath);
     }
 
     /**
-     * Выставляем флаг "Файл ответов загружен по запросу пользователя"
+     * Выставляем флаг "Файл ответов загружен по запросу пользователя".
      */
     public void answersFileWasChanged() {
         answersFileChanged = true;
     }
 
     /**
-     * Чтение файла ответов в строковый массив
+     * Чтение файла ответов в строковый массив.
      *
      * @param filePath путь к файлу ответов
-     * @return
-     * @throws Exception
+     * @return Массив строк-ответов
+     * @throws Exception -
      */
-    public List<String> readAnswersFile(String filePath) {
+    private List<String> readAnswersFile(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 
             answers = new ArrayList<>();
@@ -80,12 +102,17 @@ public class Logic {
             System.exit(ConstantsProvider.
                     ErrorCodes.ERROR_ANSWERS_FILE_IS_EMPTY.getCode());
         }
-        if (answers.size() < ConstantsProvider.MIN_ANSWERS_ALLOWED) {
-            consoleLogger.trace("Файл ответов " + filePath + " должен содержать не менее трех строк");
-            if (!answersFileChanged) {
-                System.exit(ConstantsProvider.
-                        ErrorCodes.ERROR_ANSWERS_FILE_HAS_WRONG_LINES_COUNT.getCode());
+
+        try {
+            if (answers.size() < ConstantsProvider.MIN_ANSWERS_ALLOWED) { // NOSONAR
+                consoleLogger.trace("Файл ответов " + filePath + " должен содержать не менее трех строк");
+                if (!answersFileChanged) {
+                    System.exit(ConstantsProvider.
+                            ErrorCodes.ERROR_ANSWERS_FILE_HAS_WRONG_LINES_COUNT.getCode());
+                }
             }
+        } catch (NullPointerException e) {
+            consoleLogger.trace("Файл ответов " + filePath + " не найден или недоступен.", e);
         }
 
         hello = answers.get(0);
@@ -98,27 +125,27 @@ public class Logic {
     }
 
     /**
-     * Получить строку-привествие
+     * Получить строку-привествие.
      *
-     * @return
+     * @return -
      */
     public String getHello() {
         return hello;
     }
 
     /**
-     * Получить строку-прощание
+     * Получить строку-прощание.
      *
-     * @return
+     * @return -
      */
     public String getGoodbye() {
         return goodbye;
     }
 
     /**
-     * Вывод случайного ответа из массива answers
+     * Вывод случайного ответа из массива answers.
      *
-     * @return
+     * @return -
      */
     public String getRandomAnswer() {
         Random rand = new Random();

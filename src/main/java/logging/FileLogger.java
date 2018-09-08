@@ -1,40 +1,72 @@
 package logging;
 
-import org.apache.log4j.*;
+import org.apache.log4j.DailyRollingFileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.PatternLayout;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.apache.log4j.Logger.getRootLogger;
 
 /**
- * Логирование в файл
+ * Логирование в файл.
  */
-public class FileLogger {
+public final class FileLogger {
 
-    private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(FileLogger.class);
+    /**
+     * Логирование в файл.
+     */
+    private static final org.apache.log4j.Logger LOG =
+            org.apache.log4j.Logger.getLogger(FileLogger.class);
+
+    /**
+     * FileLogger.
+     */
     private static FileLogger loggerInstance = null;
-    private String now = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss").format(LocalDateTime.now());
 
+    /**
+     * Дата-время для имени лога.
+     */
+    private String now = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss")
+                            .format(LocalDateTime.now());
+
+    /**
+     * Получить экземпляр FileLogger.
+     *
+     * @return FileLogger
+     */
     public static synchronized FileLogger getInstance() {
-        if (loggerInstance == null)
+        if (loggerInstance == null) {
             loggerInstance = new FileLogger();
+        }
         return loggerInstance;
     }
 
+    /**
+     * Инициализация.
+     */
     private FileLogger() {
 
-     DailyRollingFileAppender fa = new DailyRollingFileAppender();
+        DailyRollingFileAppender fa = new DailyRollingFileAppender();
 
-     fa.setName("FileLogger");
-     fa.setFile( now  + ".LOG");
-     fa.setLayout(new PatternLayout("%d{dd-MM-yy HH:mm:ss} %m%n"));
-     fa.setThreshold(Level.DEBUG);
-     fa.setAppend(true);
-     fa.activateOptions();
+        fa.setName("FileLogger");
+        fa.setFile(now + ".LOG");
+        fa.setLayout(new PatternLayout("%d{dd-MM-yy HH:mm:ss} %m%n"));
+        fa.setThreshold(Level.DEBUG);
+        fa.setAppend(true);
+        fa.activateOptions();
 
-     getRootLogger().addAppender(fa);
+        getRootLogger().addAppender(fa);
     }
 
-    public org.apache.log4j.Logger getLogger() { return LOG; }
+    /**
+     * Получить доступ и использовать FileLogger.
+     *
+     * @return FileLogger
+     */
+    public org.apache.log4j.Logger getLogger() {
+        return LOG;
+    }
 
 }

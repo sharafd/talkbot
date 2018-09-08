@@ -5,18 +5,36 @@ import logging.ConsoleLogger;
 import logging.FileLogger;
 import org.apache.log4j.Logger;
 
-import java.io.Console;
 import java.util.Scanner;
 
 /**
- * Чатбот.Главный класс
+ * Чатбот.Главный класс.
  */
-public class App {
+public final class App {
 
-    static Logger consoleLogger = ConsoleLogger.getInstance().getLogger();
-    static Logger fileLogger = FileLogger.getInstance().getLogger();
+    /**
+     * Logger - Вывод на консоль.
+     */
+    private static Logger consoleLogger =
+            ConsoleLogger.getInstance().getLogger();
 
-    public static void main(String[] args) {
+    /**
+     * Logger - Логирование в файл.
+     */
+    private static Logger fileLogger =
+            FileLogger.getInstance().getLogger();
+
+    /**
+     * Default non-public constructor.
+     */
+    private App() {
+        throw new IllegalAccessError("Utility class");
+    }
+
+    /**
+     * @param args -
+     */
+    public static void main(final String[] args) {
         try {
 
             boolean talking = true;
@@ -53,12 +71,15 @@ public class App {
 
                 if (s.startsWith("\"Use another file:")) {
                     try { //NOSONAR
-                        fname = s.trim().substring(0, s.length() - 1).replace("\"Use another file:", "");
+                        fname = s.trim().substring(0, s.length() - 1)
+                                .replace("\"Use another file:", "");
                         logic = new Logic(fname);
 
                     } catch (Exception e) {
-                        consoleLogger.error("Ошибка загрузки файла ответов. " + fname);
-                        consoleLogger.error("Будет продолжено использование " + currentAnswersFile);
+                        consoleLogger.error("Ошибка загрузки файла ответов. "
+                                + fname);
+                        consoleLogger.error("Будет продолжено использование "
+                                + currentAnswersFile);
 
                     }
                     currentAnswersFile = fname;
@@ -72,7 +93,8 @@ public class App {
 
         } catch (Exception e) {
             consoleLogger.trace("", e);
-            System.exit(ConstantsProvider.ErrorCodes.ERROR_UNHANDLED_EXCEPTION.getCode());
+            System.exit(ConstantsProvider
+                    .ErrorCodes.ERROR_UNHANDLED_EXCEPTION.getCode());
         }
 
     }
