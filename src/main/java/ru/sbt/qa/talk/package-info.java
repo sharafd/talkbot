@@ -4,4 +4,4 @@
  * App - Главный класс.
  * Logic - Логика.
  */
-package talk;
+package ru.sbt.qa.talk;

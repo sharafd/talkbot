@@ -1,7 +1,7 @@
-package talk;
+package ru.sbt.qa.talk;
 
-import common.ConstantsProvider;
-import logging.ConsoleLogger;
+import ru.sbt.qa.common.ConstantsProvider;
+import ru.sbt.qa.logging.ConsoleLogger;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -148,9 +148,7 @@ public class Logic {
      * @return -
      */
     public String getRandomAnswer() {
-        Random rand = new Random();
-        int n = rand.nextInt(answers.size());
-
+        int n = new Random().nextInt(answers.size());
         return answers.get(n);
     }
 

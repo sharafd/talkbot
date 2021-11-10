@@ -3,4 +3,4 @@
  * <p>
  * ConstantsProvider - Строковые константы.
  */
-package common;
+package ru.sbt.qa.common;

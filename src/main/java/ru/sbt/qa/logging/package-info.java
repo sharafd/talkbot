@@ -3,4 +3,4 @@
  * <p>
  * FileLogger - Логирование диалога в файл.
  */
-package logging;
+package ru.sbt.qa.logging;

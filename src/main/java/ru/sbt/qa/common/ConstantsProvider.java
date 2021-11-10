@@ -1,4 +1,4 @@
-package common;
+package ru.sbt.qa.common;
 
 /**
  * Константы.

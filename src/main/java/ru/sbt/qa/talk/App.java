@@ -1,8 +1,8 @@
-package talk;
+package ru.sbt.qa.talk;
 
-import common.ConstantsProvider;
-import logging.ConsoleLogger;
-import logging.FileLogger;
+import ru.sbt.qa.common.ConstantsProvider;
+import ru.sbt.qa.logging.ConsoleLogger;
+import ru.sbt.qa.logging.FileLogger;
 import org.apache.log4j.Logger;
 
 import java.util.Scanner;
@@ -54,7 +54,7 @@ public final class App {
                 if (talking) {
 
                     switch (s) {
-                        case "\"Goodbye\"":
+                        case "\"\"":
                             fileLogger.info(logic.getGoodbye());
                             System.exit(0);
                             break;

@@ -1,4 +1,4 @@
-package logging;
+package ru.sbt.qa.logging;
 
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.Level;
