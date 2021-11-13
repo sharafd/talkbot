@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logback-classic.version>1.2.6</logback-classic.version>
         <markdown-page-generator.version>2.4.0</markdown-page-generator.version>
-        <maven-assembly-plugin.version></maven-assembly-plugin.version>
+        <maven-assembly-plugin.version>2.2-beta-5</maven-assembly-plugin.version>
         <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <sonar.maven.plugin.version>3.4.0.905</sonar.maven.plugin.version>
@@ -93,7 +93,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version></version>
+                <version>${maven-assembly-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>create-distribution</id>
