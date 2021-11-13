@@ -29,15 +29,7 @@ public class ConstantsProvider {
         /**
          * Файл ответов должен содержать не менее трех строк.
          */
-        ERROR_ANSWERS_FILE_HAS_WRONG_LINES_COUNT(10004),
-        /**
-         * Unsupported Encoding.
-         */
-        ERROR_UNSUPPORTED_ENCODING(10005),
-        /**
-         * Unhandled exception
-         */
-        ERROR_UNHANDLED_EXCEPTION(10006);
+        ERROR_ANSWERS_FILE_HAS_WRONG_LINES_COUNT(10004);
         /**
          * Код ошибки.
          */

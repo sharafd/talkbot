@@ -1,23 +1,26 @@
 package ru.sbt.qa.talk;
 
+import org.slf4j.Logger;
 import ru.sbt.qa.common.ConstantsProvider;
-import ru.sbt.qa.logging.ConsoleLogger;
-import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
  * Логика работв чатбота
  */
 public class Logic {
+
+    /**
+     * Логирование.
+     */
+    private static final Logger LOG = getLogger(Logic.class);
 
     /**
      * Строка-приветствие.
@@ -40,15 +43,11 @@ public class Logic {
     private boolean answersFileChanged;
 
     /**
-     * Вывод на консоль.
+     * @param filePath полный путь к фпйлу с ответами
+     * @param isDebug  принак отладки
      */
-    private static Logger consoleLogger = ConsoleLogger.getInstance().getLogger();
-
-    /**
-     * @param filePath
-     */
-    public Logic(String filePath) {
-        readAnswersFile(filePath);
+    public Logic(String filePath, boolean isDebug) {
+        readAnswersFile(filePath, isDebug);
     }
 
     /**
@@ -63,9 +62,8 @@ public class Logic {
      *
      * @param filePath путь к файлу ответов
      * @return Массив строк-ответов
-     * @throws Exception -
      */
-    private List<String> readAnswersFile(String filePath) {
+    private List<String> readAnswersFile(String filePath, boolean isDebug) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 
             answers = new ArrayList<>();
@@ -73,53 +71,36 @@ public class Logic {
             String sCurrentLine;
 
             while ((sCurrentLine = br.readLine()) != null) {
-
                 answers.add(new String(sCurrentLine.getBytes(), Charset.defaultCharset()));
             }
 
-        } catch (FileNotFoundException e) {
-
-            consoleLogger.trace("Не найден файл ответов " + filePath);
-
-            if (!answersFileChanged) {
-                System.exit(ConstantsProvider.
-                        ErrorCodes.ERROR_ANSWERS_FILE_NOT_FOUND.getCode());
-            }
-
-
+        } catch (NullPointerException | FileNotFoundException e) {
+            e.printStackTrace();
+            LOG.info("Файл ответов " + filePath + " не найден или недоступен.");
         } catch (IOException e) {
-
-            consoleLogger.trace("Не удалось обработать файл ответов " + filePath);
-
-            if (!answersFileChanged) {
-                System.exit(ConstantsProvider.
-                        ErrorCodes.ERROR_ANSWERS_FILE_PARSING.getCode());
-            }
+            e.printStackTrace();
+            LOG.info("Не удалось обработать файл ответов {}", filePath);
         }
 
         if (answers == null) {
-            consoleLogger.trace("Пустой файл ответов " + filePath);
-            System.exit(ConstantsProvider.
-                    ErrorCodes.ERROR_ANSWERS_FILE_IS_EMPTY.getCode());
-        }
-
-        try {
-            if (answers.size() < ConstantsProvider.MIN_ANSWERS_ALLOWED) { // NOSONAR
-                consoleLogger.trace("Файл ответов " + filePath + " должен содержать не менее трех строк");
-                if (!answersFileChanged) {
-                    System.exit(ConstantsProvider.
-                            ErrorCodes.ERROR_ANSWERS_FILE_HAS_WRONG_LINES_COUNT.getCode());
-                }
+            LOG.error("Пустой файл ответов {}", filePath);
+            if (!isDebug) {
+                System.exit(ConstantsProvider.ErrorCodes.ERROR_ANSWERS_FILE_IS_EMPTY.getCode());
             }
-        } catch (NullPointerException e) {
-            consoleLogger.trace("Файл ответов " + filePath + " не найден или недоступен.", e);
+        } else {
+            if (answers.size() < ConstantsProvider.MIN_ANSWERS_ALLOWED) { // NOSONAR
+                LOG.error("Файл ответов " + filePath + " должен содержать не менее трех строк");
+                if (!answersFileChanged && !isDebug) {
+                    System.exit(ConstantsProvider.ErrorCodes.ERROR_ANSWERS_FILE_HAS_WRONG_LINES_COUNT.getCode());
+                }
+            } else {
+                hello = answers.get(0);
+                answers.remove(0);
+
+                goodbye = answers.get(answers.size() - 1);
+                answers.remove(answers.size() - 1);
+            }
         }
-
-        hello = answers.get(0);
-        answers.remove(0);
-
-        goodbye = answers.get(answers.size() - 1);
-        answers.remove(answers.size() - 1);
 
         return answers;
     }
@@ -127,7 +108,7 @@ public class Logic {
     /**
      * Получить строку-привествие.
      *
-     * @return -
+     * @return строка-привествие.
      */
     public String getHello() {
         return hello;
@@ -136,7 +117,7 @@ public class Logic {
     /**
      * Получить строку-прощание.
      *
-     * @return -
+     * @return строка-прощание.
      */
     public String getGoodbye() {
         return goodbye;
@@ -145,12 +126,11 @@ public class Logic {
     /**
      * Вывод случайного ответа из массива answers.
      *
-     * @return -
+     * @return ответ
      */
     public String getRandomAnswer() {
         int n = new Random().nextInt(answers.size());
         return answers.get(n);
     }
-
 
 }

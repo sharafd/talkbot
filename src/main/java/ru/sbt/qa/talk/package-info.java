@@ -1,7 +1,7 @@
 /**
  * Чатбот.
  * <p>
- * App - Главный класс.
+ * Talkbot - Главный класс.
  * Logic - Логика.
  */
 package ru.sbt.qa.talk;

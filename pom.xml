@@ -4,7 +4,7 @@
 
     <groupId>ru.sbt.qa</groupId>
     <artifactId>talkbot</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -12,17 +12,26 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <log4j.version>1.2.17</log4j.version>
+        <logback-classic.version>1.2.6</logback-classic.version>
+        <markdown-page-generator.version>2.4.0</markdown-page-generator.version>
+        <maven-assembly-plugin.version></maven-assembly-plugin.version>
         <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <sonar.maven.plugin.version>3.4.0.905</sonar.maven.plugin.version>
+        <testng.version>7.4.0</testng.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -48,8 +57,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -66,7 +75,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ru.sbt.qa.talk.App</mainClass>
+                                    <mainClass>ru.sbt.qa.talk.Talkbot</mainClass>
                                 </transformer>
                             </transformers>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -84,6 +93,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version></version>
                 <executions>
                     <execution>
                         <id>create-distribution</id>
@@ -96,7 +106,7 @@
                                 <descriptor>assembly.xml</descriptor>
                             </descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
-                            <finalName>${artifactId}-${version}</finalName>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
                         </configuration>
                     </execution>
                 </executions>
@@ -104,7 +114,7 @@
             <plugin>
                 <groupId>com.ruleoftech</groupId>
                 <artifactId>markdown-page-generator-plugin</artifactId>
-                <version>2.4.0</version>
+                <version>${markdown-page-generator.version}</version>
                 <configuration>
                     <inputDirectory>${project.basedir}</inputDirectory>
                     <outputDirectory>target</outputDirectory>
