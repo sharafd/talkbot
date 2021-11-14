@@ -2,7 +2,7 @@ package ru.sbt.qa;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import ru.sbt.qa.talk.Logic;
+import ru.sbt.qa.talkbot.Logic;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,16 +17,33 @@ public class LogicTest {
 
     @Test(description = "Корректный файл ответов")
     public void defaultFileNameTest() {
-        Assert.assertNotSame(new Logic("answers.txt", false).getRandomAnswer(), "Привет!");
-        Assert.assertNotSame(new Logic("answers.txt", false).getRandomAnswer(), "До встречи.");
+        Logic logic = new Logic("answers.txt", false);
+        Assert.assertNotSame(logic.getRandomAnswer(), "Привет!");
+        Assert.assertNotSame(logic.getRandomAnswer(), "До встречи.");
     }
 
     @Test(description = "Корректный файл ответов")
     public void validFileNameTest() {
-        Assert.assertNotNull(new Logic(basePath + "/src/test/resources/new.txt", false).getRandomAnswer());
-        Assert.assertNotSame(new Logic("answers.txt", false).getRandomAnswer(), "1");
-        Assert.assertNotSame(new Logic("answers.txt", false).getRandomAnswer(), "2");
+        String answersFile = basePath + "/src/test/resources/new.txt";
+        Logic logic = new Logic(answersFile, false);
+
+        Assert.assertSame(logic.getHello(), "1");
+        Assert.assertSame(logic.getRandomAnswer(), "2");
+        Assert.assertSame(logic.getGoodbye(), "3");
     }
+
+    @Test(description = "Корректный файл ответов, признак перехода на новый файл")
+    public void answersFileWasChangedTest() {
+        String answersFile = basePath + "/src/test/resources/new.txt";
+        Logic logic = new Logic(answersFile, false);
+
+        Assert.assertNotNull(logic.getRandomAnswer());
+
+        logic.setAnswersFileWasChanged(true);
+
+        Assert.assertTrue(logic.getAnswersFileWasChanged());
+    }
+
 
     @Test(description = "Файл ответов не определён")
     public void nullFileNameTest() {
@@ -50,6 +67,7 @@ public class LogicTest {
     public void emptyAnswersFileTest() {
         try {
             logic = new Logic(basePath + "/src/test/resources/empty.txt", true);
+            logic.setAnswersFileWasChanged(true);
         } catch (IndexOutOfBoundsException e) {
             Assert.assertNull(logic);
         }
@@ -58,6 +76,7 @@ public class LogicTest {
     @Test(description = "Файл ответов из одной строки")
     public void onlinerAnswersFileTest() {
         logic = new Logic(basePath + "/src/test/resources/oneliner.txt", true);
+        logic.setAnswersFileWasChanged(true);
         Assert.assertNull(logic.getGoodbye());
     }
 

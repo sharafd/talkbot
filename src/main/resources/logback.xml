@@ -28,19 +28,19 @@
         </encoder>
     </appender>
 
-    <logger name="ru.sbt.qa.talk.Talkbot" level="info" additivity="false">
+    <logger name="ru.sbt.qa.talkbot.Talkbot" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="ru.sbt.qa.talk.Talkbot" level="trace" additivity="false">
+    <logger name="ru.sbt.qa.talkbot.Talkbot" level="trace" additivity="false">
         <appender-ref ref="FILE-ROLLING"/>
     </logger>
 
-    <logger name="ru.sbt.qa.talk.Logic" level="info" additivity="false">
+    <logger name="ru.sbt.qa.talkbot.Logic" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="ru.sbt.qa.talk.Logic" level="trace" additivity="false">
+    <logger name="ru.sbt.qa.talkbot.Logic" level="trace" additivity="false">
         <appender-ref ref="FILE-ROLLING"/>
     </logger>
 

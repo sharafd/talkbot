@@ -1,4 +1,4 @@
-package ru.sbt.qa.talk;
+package ru.sbt.qa.talkbot;
 
 import org.slf4j.Logger;
 
@@ -70,9 +70,9 @@ public final class Talkbot {
                         LOG.info("Загружен файл ответов: {}", fname);
                         logic = new Logic(fname, false);
                         currentAnswersFile = fname;
-                        logic.answersFileWasChanged();
+                        logic.setAnswersFileWasChanged(true);
                     } catch (Exception e) {
-                        LOG.error("Ошибка загрузки файла ответов {}", fname);
+                        LOG.error("Ошибка загрузки файла ответов {} {}", fname, e);
                         LOG.error("Будет продолжено использование {}", currentAnswersFile);
                     }
                 }

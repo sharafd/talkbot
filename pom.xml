@@ -4,14 +4,22 @@
 
     <groupId>ru.sbt.qa</groupId>
     <artifactId>talkbot</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
     <url>https://github.com/sharafd/talkbot</url>
 
+    <scm>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:${project.scm.url}</developerConnection>
+        <url>git@github.com:sharafd/talkbot.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
         <logback-classic.version>1.2.6</logback-classic.version>
         <markdown-page-generator.version>2.4.0</markdown-page-generator.version>
         <maven-assembly-plugin.version>2.2-beta-5</maven-assembly-plugin.version>
@@ -42,9 +50,9 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <sonar.host.url>http://localhost:9000</sonar.host.url>
-                <sonar.login>5c319010bfb8be162e9ccb1e9fb662a1e1bae53f</sonar.login>
-                <sonar.projectName>talkbot</sonar.projectName>
+                <sonar.host.url>http://192.168.1.60:49159</sonar.host.url>
+                <sonar.login>d3e68df957ef7eab6978a08014b6b5010a98ce5d</sonar.login>
+                <sonar.projectName>ru.sbt.qa.talkbot</sonar.projectName>
                 <sonar.language>java</sonar.language>
             </properties>
         </profile>
@@ -75,7 +83,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ru.sbt.qa.talk.Talkbot</mainClass>
+                                    <mainClass>ru.sbt.qa.talkbot.Talkbot</mainClass>
                                 </transformer>
                             </transformers>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -127,6 +135,58 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <!-- Add this checking -->
+                    <execution>
+                        <id>jacoco-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.8</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <excludes>
+                                <exclude>ru.sbt.qa.talkbot.Talkbot.class</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <preparationGoals>clean</preparationGoals>
+                    <goals>package</goals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
             </plugin>
         </plugins>
     </build>

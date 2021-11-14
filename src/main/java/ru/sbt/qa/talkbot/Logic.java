@@ -1,13 +1,13 @@
-package ru.sbt.qa.talk;
+package ru.sbt.qa.talkbot;
 
 import org.slf4j.Logger;
 import ru.sbt.qa.common.ConstantsProvider;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -51,13 +51,6 @@ public class Logic {
     }
 
     /**
-     * Выставляем флаг "Файл ответов загружен по запросу пользователя".
-     */
-    public void answersFileWasChanged() {
-        answersFileChanged = true;
-    }
-
-    /**
      * Чтение файла ответов в строковый массив.
      *
      * @param filePath путь к файлу ответов
@@ -75,11 +68,9 @@ public class Logic {
             }
 
         } catch (NullPointerException | FileNotFoundException e) {
-            e.printStackTrace();
-            LOG.info("Файл ответов " + filePath + " не найден или недоступен.");
+            LOG.info("Файл ответов {} не найден или недоступен.", filePath, e);
         } catch (IOException e) {
-            e.printStackTrace();
-            LOG.info("Не удалось обработать файл ответов {}", filePath);
+            LOG.info("Не удалось обработать файл ответов {} {}", filePath, e);
         }
 
         if (answers == null) {
@@ -89,7 +80,7 @@ public class Logic {
             }
         } else {
             if (answers.size() < ConstantsProvider.MIN_ANSWERS_ALLOWED) { // NOSONAR
-                LOG.error("Файл ответов " + filePath + " должен содержать не менее трех строк");
+                LOG.error("Файл ответов {} должен содержать не менее трех строк", filePath);
                 if (!answersFileChanged && !isDebug) {
                     System.exit(ConstantsProvider.ErrorCodes.ERROR_ANSWERS_FILE_HAS_WRONG_LINES_COUNT.getCode());
                 }
@@ -103,6 +94,22 @@ public class Logic {
         }
 
         return answers;
+    }
+
+    /**
+     * Выставляем флаг "Файл ответов загружен по запросу пользователя".
+     * @param value boolean
+     */
+    public void setAnswersFileWasChanged(boolean value) {
+        answersFileChanged = value;
+    }
+
+    /**
+     * Получить значение флага "Файл ответов загружен по запросу пользователя".
+     * @return boolean
+     */
+    public boolean getAnswersFileWasChanged(){
+        return answersFileChanged;
     }
 
     /**
@@ -129,7 +136,7 @@ public class Logic {
      * @return ответ
      */
     public String getRandomAnswer() {
-        int n = new Random().nextInt(answers.size());
+        int n = new SecureRandom().nextInt(answers.size());
         return answers.get(n);
     }
 
