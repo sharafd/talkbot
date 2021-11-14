@@ -3,7 +3,7 @@
 
     <groupId>ru.sbt.qa</groupId>
     <artifactId>talkbot</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -13,7 +13,7 @@
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>git@github.com:sharafd/talkbot.git</url>
-        <tag>HEAD</tag>
+        <tag>talkbot-1.0.1</tag>
     </scm>
 
     <properties>
