@@ -26,7 +26,6 @@
         <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
-        <sonar.maven.plugin.version>3.4.0.905</sonar.maven.plugin.version>
         <testng.version>7.4.0</testng.version>
     </properties>
 
@@ -51,11 +50,21 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <sonar.host.url>http://192.168.1.60:49159</sonar.host.url>
-                <sonar.login>d3e68df957ef7eab6978a08014b6b5010a98ce5d</sonar.login>
+                <sonar.maven.plugin.version>3.4.0.905</sonar.maven.plugin.version>
+                <sonar.host.url>http://172.17.0.2:9000</sonar.host.url>
+                <sonar.login>d89e6d5fbf1ded19685c54f11b0cdc7c7433ce0a</sonar.login>
                 <sonar.projectName>ru.sbt.qa.talkbot</sonar.projectName>
                 <sonar.language>java</sonar.language>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>${sonar.maven.plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
@@ -92,11 +101,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar.maven.plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
