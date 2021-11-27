@@ -1,10 +1,12 @@
 package ru.sbt.qa.talkbot;
 
 import org.slf4j.Logger;
+import ru.sbt.qa.common.CommonUtis;
 import ru.sbt.qa.common.ConstantsProvider;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +59,10 @@ public class Logic {
      * @return Массив строк-ответов
      */
     private List<String> readAnswersFile(String filePath, boolean isDebug) {
+
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 
+            CommonUtis.removeBom(Paths.get(filePath));
             answers = new ArrayList<>();
 
             String sCurrentLine;

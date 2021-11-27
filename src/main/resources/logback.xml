@@ -44,4 +44,8 @@
         <appender-ref ref="FILE-ROLLING"/>
     </logger>
 
+    <logger name="ru.sbt.qa.common.CommonUtis" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
 </configuration>
