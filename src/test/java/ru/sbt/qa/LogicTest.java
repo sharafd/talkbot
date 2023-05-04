@@ -27,9 +27,9 @@ public class LogicTest {
         String answersFile = basePath + "/src/test/resources/new.txt";
         Logic logic = new Logic(answersFile, false);
 
-        Assert.assertSame(logic.getHello(), "1");
-        Assert.assertSame(logic.getRandomAnswer(), "2");
-        Assert.assertSame(logic.getGoodbye(), "3");
+        Assert.assertEquals(logic.getHello(), "1");
+        Assert.assertEquals(logic.getRandomAnswer(), "2");
+        Assert.assertEquals(logic.getGoodbye(), "3");
     }
 
     @Test(description = "Корректный файл ответов, признак перехода на новый файл")
