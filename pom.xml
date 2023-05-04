@@ -28,6 +28,7 @@
         <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
+        <sonar.maven.plugin.version>3.8.0.2131</sonar.maven.plugin.version>
         <testng.version>7.7.0</testng.version>
     </properties>
 
